@@ -16,8 +16,6 @@ public abstract class MyRoomDatabase : RoomDatabase() {
     abstract fun wordDao() : WordDao
     abstract fun contactDao() : ContactDao
 
-
-
         companion object {
 
             private val MIGRATION_1_2 = object : Migration(1,2) {
@@ -36,7 +34,7 @@ public abstract class MyRoomDatabase : RoomDatabase() {
                         context.applicationContext,
                         MyRoomDatabase::class.java,
                         "word_database")
-                    .addCallback(WordRoomCallback(scope))
+                        .addCallback(WordRoomCallback(scope))
                         .fallbackToDestructiveMigration() // good for testing, but this clear whole data
                         .addMigrations(MIGRATION_1_2)
                         .build()
@@ -59,12 +57,7 @@ public abstract class MyRoomDatabase : RoomDatabase() {
         }
 
         suspend fun populateDatabase(wordDao: WordDao) {
-            wordDao.deleteAll()
-            var word = Word("Hello")
-            wordDao.insert(word)
-            word = Word("World")
-            wordDao.insert(word)
-
+           // mozna dac jakies inserty tutaj
         }
     }
 

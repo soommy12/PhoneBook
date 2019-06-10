@@ -10,23 +10,13 @@ import pl.bgn.roompoc.data.*
 
 class ContactViewModel(application: Application) : AndroidViewModel(application){
 
-    private val repository: WordRepository
-    val allWords: LiveData<List<Word>>
     private val contactRepository: ContactsRepository
     val allContacts: LiveData<List<Contact>>
 
     init {
-        val wordsDao = MyRoomDatabase.getDatabase(application, viewModelScope).wordDao()
-        repository = WordRepository(wordsDao)
-        allWords = repository.allWords
-
         val contactDao = MyRoomDatabase.getDatabase(application, viewModelScope).contactDao()
         contactRepository = ContactsRepository(contactDao)
         allContacts = contactRepository.allContacts
-    }
-
-    fun insert(word: Word) = viewModelScope.launch(Dispatchers.IO) {
-        repository.insert(word)
     }
 
     fun insert(contact: Contact) = viewModelScope.launch(Dispatchers.IO) { contactRepository.insert(contact)}
