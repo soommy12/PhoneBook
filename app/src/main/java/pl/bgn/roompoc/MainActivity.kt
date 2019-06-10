@@ -17,22 +17,22 @@ import pl.bgn.roompoc.data.Word
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var wordViewModel: WordViewModel
+    private lateinit var contactViewModel: ContactViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        wordViewModel = ViewModelProviders.of(this).get(WordViewModel::class.java)
+        contactViewModel = ViewModelProviders.of(this).get(ContactViewModel::class.java)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
         val adapter = WordListAdapter(this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-        wordViewModel.allWords.observe(this, Observer { words ->
+        contactViewModel.allWords.observe(this, Observer { words ->
             words?.let { adapter.setWords(it) }
         })
         fab.setOnClickListener {
-            val intent = Intent(this@MainActivity, NewWordActivity::class.java)
+            val intent = Intent(this@MainActivity, NewContactActivity::class.java)
             startActivityForResult(intent, newWordActivityRequestCode)
         }
     }
@@ -58,8 +58,8 @@ class MainActivity : AppCompatActivity() {
 
         if(requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK){
             data?.let{
-                val word = Word(it.getStringExtra(NewWordActivity.EXTRA_REPLY))
-                wordViewModel.insert(word)
+                val word = Word(it.getStringExtra(NewContactActivity.EXTRA_REPLY))
+                contactViewModel.insert(word)
             }
         } else {
             Toast.makeText(applicationContext, R.string.empty_not_saved, Toast.LENGTH_LONG).show()

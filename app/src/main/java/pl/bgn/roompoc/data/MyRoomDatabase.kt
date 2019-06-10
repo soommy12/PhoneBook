@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Database(entities = [Word::class, Contact::class], version = 2)
-public abstract class WordRoomDatabase : RoomDatabase() {
+public abstract class MyRoomDatabase : RoomDatabase() {
 
     abstract fun wordDao() : WordDao
     abstract fun contactDao() : ContactDao
@@ -27,17 +27,17 @@ public abstract class WordRoomDatabase : RoomDatabase() {
             }
 
             @Volatile
-            private var INSTANCE: WordRoomDatabase? = null
+            private var INSTANCE: MyRoomDatabase? = null
             fun getDatabase(
                 context : Context,
-                scope: CoroutineScope): WordRoomDatabase {
+                scope: CoroutineScope): MyRoomDatabase {
                 return INSTANCE ?: synchronized(this) {
                     val instance = Room.databaseBuilder(
                         context.applicationContext,
-                        WordRoomDatabase::class.java,
+                        MyRoomDatabase::class.java,
                         "word_database")
-//                    .addCallback(WordRoomCallback(scope))
-//                        .fallbackToDestructiveMigration() // good for testing, but this clear whole data
+                    .addCallback(WordRoomCallback(scope))
+                        .fallbackToDestructiveMigration() // good for testing, but this clear whole data
                         .addMigrations(MIGRATION_1_2)
                         .build()
                 INSTANCE = instance
@@ -52,7 +52,8 @@ public abstract class WordRoomDatabase : RoomDatabase() {
             super.onOpen(db)
             INSTANCE?.let { database ->
                     scope.launch(Dispatchers.IO) {
-                        populateDatabase(database.wordDao())
+//                        populateDatabase(database.wordDao())
+//                        database.wordDao().deleteAll()
                     }
             }
         }
