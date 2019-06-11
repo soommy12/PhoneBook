@@ -36,7 +36,8 @@ class ContactListAdapter internal constructor(context: Context) : RecyclerView.A
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
         val current = contacts[position]
-        holder.namesurnameView.text = current.name + " " + current.surname
+        val name = current.surname + " " + current.name
+        holder.namesurnameView.text = name
         holder.phoneView.text = current.number.toString()
     }
 

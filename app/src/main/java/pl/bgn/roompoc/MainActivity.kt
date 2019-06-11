@@ -2,6 +2,7 @@ package pl.bgn.roompoc
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
@@ -20,22 +21,18 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
 
     override fun onContactClick(position: Int) {
         val intent = Intent(this@MainActivity, SingleContactActivity::class.java)
-        val contact = contactViewModel.allContacts.value!![position]
-        intent.putExtra(SingleContactActivity.EXTRA_ID, contact.id)
-        intent.putExtra(SingleContactActivity.EXTRA_NAME, contact.name)
-        intent.putExtra(SingleContactActivity.EXTRA_SURNAME, contact.surname)
-        intent.putExtra(SingleContactActivity.EXTRA_PHONE, contact.number)
+        intent.putExtra(SingleContactActivity.EXTRA_ID, contactsViewModel.allContacts.value!![position].id)
         startActivityForResult(intent, newWordActivityRequestCode)
     }
 
-    private lateinit var contactViewModel: ContactViewModel
+    private lateinit var contactsViewModel: ContactsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        contactViewModel = ViewModelProviders.of(this).get(ContactViewModel::class.java)
+        contactsViewModel = ViewModelProviders.of(this).get(ContactsViewModel::class.java)
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
         val adapter = ContactListAdapter(this)
@@ -46,8 +43,8 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                val contact = contactViewModel.allContacts.value!![position]
-                contactViewModel.delete(contact)
+                val contact = contactsViewModel.allContacts.value!![position]
+                contactsViewModel.delete(contact)
             }
 
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
@@ -57,7 +54,7 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
-        contactViewModel.allContacts.observe(this, Observer { contacts ->
+        contactsViewModel.allContacts.observe(this, Observer { contacts ->
             contacts?.let { adapter.setContacts(it) }
         })
 
@@ -87,22 +84,8 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == newWordActivityRequestCode){
             when (resultCode) {
-                SingleContactActivity.RESULT_INSERT -> data?.let{
-                    val contact = Contact(
-                        0,
-                        it.getStringExtra(SingleContactActivity.EXTRA_NAME),
-                        it.getStringExtra(SingleContactActivity.EXTRA_SURNAME),
-                        it.getIntExtra(SingleContactActivity.EXTRA_PHONE, 0))
-                    contactViewModel.insert(contact)
-                }
-                SingleContactActivity.RESULT_UPDATE -> data?.let{
-                    val contact = Contact(
-                        it.getIntExtra(SingleContactActivity.EXTRA_ID, 0),
-                        it.getStringExtra(SingleContactActivity.EXTRA_NAME),
-                        it.getStringExtra(SingleContactActivity.EXTRA_SURNAME),
-                        it.getIntExtra(SingleContactActivity.EXTRA_PHONE, 0))
-                    contactViewModel.update(contact)
-                }
+                SingleContactActivity.RESULT_INSERT -> Toast.makeText(this, "New contact added", Toast.LENGTH_SHORT).show()
+                SingleContactActivity.RESULT_UPDATE -> Toast.makeText(this, "Contact updated", Toast.LENGTH_SHORT).show()
                 SingleContactActivity.RESULT_NO_DATA -> Toast.makeText(applicationContext, R.string.empty_not_saved, Toast.LENGTH_LONG).show()
             }
         }

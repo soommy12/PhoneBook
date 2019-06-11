@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import pl.bgn.roompoc.data.*
 
-class ContactViewModel(application: Application) : AndroidViewModel(application){
+class ContactsViewModel(application: Application) : AndroidViewModel(application){
 
     private val contactRepository: ContactsRepository
     val allContacts: LiveData<List<Contact>>

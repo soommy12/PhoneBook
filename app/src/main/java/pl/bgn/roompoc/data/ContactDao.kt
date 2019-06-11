@@ -17,4 +17,7 @@ interface ContactDao {
 
     @Query("SELECT * FROM contact_table ORDER BY surname ASC")
     fun getAllContacts() : LiveData<List<Contact>>
+
+    @Query("SELECT * FROM contact_table WHERE id = :id")
+    fun getContact(id :Int) : Contact
 }

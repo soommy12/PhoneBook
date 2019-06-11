@@ -1,18 +1,25 @@
 package pl.bgn.roompoc
 
-import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
+import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import pl.bgn.roompoc.data.Contact
 
 class SingleContactActivity : AppCompatActivity() {
 
     private lateinit var editNameView: EditText
     private lateinit var editSurnameView: EditText
     private lateinit var editPhoneNumberView: EditText
+    private lateinit var viewModel: SingleContactViewModel
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,11 +29,15 @@ class SingleContactActivity : AppCompatActivity() {
         editPhoneNumberView = findViewById(R.id.edit_phone)
 
         val bundle : Bundle ?= intent.extras
-        editNameView.setText(bundle?.getString(EXTRA_NAME))
-        editSurnameView.setText(bundle?.getString(EXTRA_SURNAME))
-        if(bundle?.getInt(EXTRA_PHONE) != null)
-            editPhoneNumberView.setText(bundle.getInt(EXTRA_PHONE).toString())
         val id = bundle?.getInt(EXTRA_ID)
+        viewModel = ViewModelProviders.of(this).get(SingleContactViewModel::class.java)
+        if(id != null) {
+            CoroutineScope(Dispatchers.IO).launch {
+                editNameView.setText(viewModel.getContact(id).name)
+                editSurnameView.setText(viewModel.getContact(id).surname)
+                editPhoneNumberView.setText(viewModel.getContact(id).number.toString())
+            }
+        }
 
         val button = findViewById<Button>(R.id.button_save)
         button.setOnClickListener {
@@ -38,13 +49,13 @@ class SingleContactActivity : AppCompatActivity() {
                 val name = editNameView.text.toString()
                 val surname = editSurnameView.text.toString()
                 val phone : Int = editPhoneNumberView.text.toString().toInt()
-                replyIntent.putExtra(EXTRA_NAME, name)
-                replyIntent.putExtra(EXTRA_SURNAME, surname)
-                replyIntent.putExtra(EXTRA_PHONE, phone)
                 if(id != null) {
-                    replyIntent.putExtra(EXTRA_ID, id)
-                    setResult(RESULT_UPDATE, replyIntent)
-                } else setResult(RESULT_INSERT, replyIntent)
+                    viewModel.update(Contact(id, surname, name, phone))
+                    setResult(RESULT_UPDATE, Intent())
+                } else {
+                    viewModel.insert(Contact(0, surname, name, phone))
+                    setResult(RESULT_INSERT, Intent())
+                }
             }
             finish()
         }
@@ -55,8 +66,5 @@ class SingleContactActivity : AppCompatActivity() {
         const val RESULT_INSERT = 1
         const val RESULT_UPDATE = 2
         const val EXTRA_ID = "pl.bgn.roompoc.ID"
-        const val EXTRA_NAME = "pl.bgn.roompoc.NAME"
-        const val EXTRA_SURNAME = "pl.bgn.roompoc.SURNANE"
-        const val EXTRA_PHONE = "pl.bgn.roompoc.PHONE"
     }
 }
