@@ -10,10 +10,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Word::class, Contact::class], version = 2)
-public abstract class MyRoomDatabase : RoomDatabase() {
+@Database(entities = [Contact::class], version = 3)
+abstract class MyRoomDatabase : RoomDatabase() {
 
-    abstract fun wordDao() : WordDao
     abstract fun contactDao() : ContactDao
 
         companion object {
@@ -21,6 +20,12 @@ public abstract class MyRoomDatabase : RoomDatabase() {
             private val MIGRATION_1_2 = object : Migration(1,2) {
                 override fun migrate(database: SupportSQLiteDatabase) {
                     database.execSQL("CREATE TABLE 'contact_table' ('id' INTEGER NOT NULL, 'surname' TEXT NOT NULL, 'name' TEXT NOT NULL, 'number' INTEGER NOT NULL, PRIMARY KEY('id'))")
+                }
+            }
+
+            private val MIGRATION_2_3 = object : Migration(2,3){
+                override fun migrate(database: SupportSQLiteDatabase) {
+                    database.execSQL("DROP TABLE 'word_table'")
                 }
             }
 
@@ -36,7 +41,7 @@ public abstract class MyRoomDatabase : RoomDatabase() {
                         "word_database")
                         .addCallback(WordRoomCallback(scope))
                         .fallbackToDestructiveMigration() // good for testing, but this clear whole data
-                        .addMigrations(MIGRATION_1_2)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                         .build()
                 INSTANCE = instance
                 instance
@@ -50,13 +55,12 @@ public abstract class MyRoomDatabase : RoomDatabase() {
             super.onOpen(db)
             INSTANCE?.let { database ->
                     scope.launch(Dispatchers.IO) {
-//                        populateDatabase(database.wordDao())
-//                        database.wordDao().deleteAll()
+                        populateDatabase(database.contactDao())
                     }
             }
         }
 
-        suspend fun populateDatabase(wordDao: WordDao) {
+        suspend fun populateDatabase(contactDao: ContactDao) {
            // mozna dac jakies inserty tutaj
         }
     }
