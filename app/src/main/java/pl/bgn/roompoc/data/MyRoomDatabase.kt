@@ -39,8 +39,8 @@ abstract class MyRoomDatabase : RoomDatabase() {
                         context.applicationContext,
                         MyRoomDatabase::class.java,
                         "word_database")
-                        .addCallback(WordRoomCallback(scope))
-                        .fallbackToDestructiveMigration() // good for testing, but this clear whole data
+                        .addCallback(ContactDatabaseCallback(scope))
+//                        .fallbackToDestructiveMigration() // if no migrations, or migrations are wrong - destroy whole db
                         .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                         .build()
                 INSTANCE = instance
@@ -49,7 +49,7 @@ abstract class MyRoomDatabase : RoomDatabase() {
         }
     }
 
-    private class WordRoomCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
+    private class ContactDatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
 
         override fun onOpen(db: SupportSQLiteDatabase) {
             super.onOpen(db)
