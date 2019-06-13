@@ -33,9 +33,10 @@ class SingleContactActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this).get(SingleContactViewModel::class.java)
         if(id != null) {
             CoroutineScope(Dispatchers.IO).launch {
-                editNameView.setText(viewModel.getContact(id).name)
-                editSurnameView.setText(viewModel.getContact(id).surname)
-                editPhoneNumberView.setText(viewModel.getContact(id).number.toString())
+                val contact = viewModel.getContact(id)
+                editNameView.setText(contact.name)
+                editSurnameView.setText(contact.surname)
+                editPhoneNumberView.setText(contact.number.toString())
             }
         }
 

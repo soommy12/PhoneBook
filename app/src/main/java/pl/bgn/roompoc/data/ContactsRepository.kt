@@ -2,9 +2,10 @@ package pl.bgn.roompoc.data
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 class ContactsRepository(private val contactDao: ContactDao) {
-    val allContacts: LiveData<List<Contact>> = contactDao.getAllContacts()
+    var contacts: LiveData<List<Contact>> = contactDao.getAllContacts()
 
     @WorkerThread
     suspend fun insert(contact: Contact) = contactDao.insert(contact)
@@ -17,4 +18,7 @@ class ContactsRepository(private val contactDao: ContactDao) {
 
     @WorkerThread
     fun getContact(id :Int) = contactDao.getContact(id)
+
+    @WorkerThread
+    fun getSearchContacts(text: String?) = contactDao.getSearchContacts(text)
 }

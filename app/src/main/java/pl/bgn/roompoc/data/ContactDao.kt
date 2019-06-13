@@ -1,6 +1,7 @@
 package pl.bgn.roompoc.data
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 
 @Dao
@@ -20,4 +21,7 @@ interface ContactDao {
 
     @Query("SELECT * FROM contact_table WHERE id = :id")
     fun getContact(id :Int) : Contact
+
+    @Query("SELECT * FROM contact_table WHERE name LIKE :queryText OR surname LIKE :queryText")
+    fun getSearchContacts(queryText: String?) : LiveData<List<Contact>>
 }

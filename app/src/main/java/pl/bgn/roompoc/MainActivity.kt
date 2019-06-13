@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -14,18 +15,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import kotlinx.android.synthetic.main.activity_main.*
-import pl.bgn.roompoc.data.Contact
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
 
 
     override fun onContactClick(position: Int) {
         val intent = Intent(this@MainActivity, SingleContactActivity::class.java)
-        intent.putExtra(SingleContactActivity.EXTRA_ID, contactsViewModel.allContacts.value!![position].id)
+        intent.putExtra(SingleContactActivity.EXTRA_ID, contactsViewModel.contacts.value!![position].id)
         startActivityForResult(intent, newWordActivityRequestCode)
     }
 
     private lateinit var contactsViewModel: ContactsViewModel
+    private lateinit var searchView: SearchView
+    private lateinit var adapter: ContactListAdapter
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +40,8 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
 
         contactsViewModel = ViewModelProviders.of(this).get(ContactsViewModel::class.java)
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
-        val adapter = ContactListAdapter(this)
+        recyclerView = findViewById(R.id.recyclerview)
+        adapter = ContactListAdapter(this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -43,7 +49,7 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                val contact = contactsViewModel.allContacts.value!![position]
+                val contact = contactsViewModel.contacts.value!![position]
                 contactsViewModel.delete(contact)
             }
 
@@ -54,8 +60,12 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
-        contactsViewModel.allContacts.observe(this, Observer { contacts ->
-            contacts?.let { adapter.setContacts(it) }
+        contactsViewModel.contacts.observe(this, Observer { contacts ->
+            contacts?.let {
+                Log.e("TAG", "Observer")
+
+                adapter.setContacts(it)
+            }
         })
 
         fab.setOnClickListener {
@@ -64,20 +74,48 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
+    private val onQuerySearchListener = object : SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String?): Boolean {
+            getContactsFromDB(query)
+            return true
+        }
+
+        override fun onQueryTextChange(newText: String?): Boolean {
+            getContactsFromDB(newText)
+            return true
+        }
+
+        private fun getContactsFromDB(searchText: String?) {
+            CoroutineScope(Dispatchers.IO).launch {
+                val search = "%$searchText%"
+                contactsViewModel.search(search)
+            }
+        }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
+    private val onCloseListener = SearchView.OnCloseListener {
+        contactsViewModel.getAllContacts()
+        true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        val menuItem = menu.findItem(R.id.action_search)
+        menuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                contactsViewModel.getAllContacts()
+                return true
+            }
+        })
+        searchView = menuItem.actionView as SearchView
+        searchView.isSubmitButtonEnabled = true
+        searchView.setOnQueryTextListener(onQuerySearchListener)
+        searchView.setOnCloseListener(onCloseListener)
+        return true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
