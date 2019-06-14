@@ -3,21 +3,17 @@ package pl.bgn.roompoc
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
 
@@ -63,7 +59,6 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
         contactsViewModel.contacts.observe(this, Observer { contacts ->
             contacts?.let {
                 Log.e("TAG", "Observer")
-
                 adapter.setContacts(it)
             }
         })
@@ -86,16 +81,9 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
         }
 
         private fun getContactsFromDB(searchText: String?) {
-            CoroutineScope(Dispatchers.IO).launch {
-                val search = "%$searchText%"
-                contactsViewModel.search(search)
-            }
+            val search = "%$searchText%"
+            contactsViewModel.setSearchValue(search)
         }
-    }
-
-    private val onCloseListener = SearchView.OnCloseListener {
-        contactsViewModel.getAllContacts()
-        true
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -107,14 +95,13 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
             }
 
             override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                contactsViewModel.getAllContacts()
+                searchView.setQuery("", false) // to wykona nam onQuerySearch listener wiec w konsekwencji vieModel.setSearchValue
                 return true
             }
         })
         searchView = menuItem.actionView as SearchView
         searchView.isSubmitButtonEnabled = true
         searchView.setOnQueryTextListener(onQuerySearchListener)
-        searchView.setOnCloseListener(onCloseListener)
         return true
     }
 
