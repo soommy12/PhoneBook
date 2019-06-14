@@ -40,7 +40,7 @@ abstract class MyRoomDatabase : RoomDatabase() {
                         MyRoomDatabase::class.java,
                         "word_database")
                         .addCallback(ContactDatabaseCallback(scope))
-//                        .fallbackToDestructiveMigration() // if no migrations, or migrations are wrong - destroy whole db
+                        .fallbackToDestructiveMigration() // if no migrations, or migrations are wrong - destroy whole db
                         .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                         .build()
                 INSTANCE = instance

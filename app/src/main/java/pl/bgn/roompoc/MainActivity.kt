@@ -2,7 +2,6 @@ package pl.bgn.roompoc
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
@@ -58,7 +57,6 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
 
         contactsViewModel.contacts.observe(this, Observer { contacts ->
             contacts?.let {
-                Log.e("TAG", "Observer")
                 adapter.setContacts(it)
             }
         })

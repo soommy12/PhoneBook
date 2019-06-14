@@ -12,7 +12,7 @@ import java.lang.RuntimeException
 class ContactListAdapter internal constructor(context: Context) : RecyclerView.Adapter<ContactListAdapter.ContactViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var contacts = emptyList<Contact>() //Cached copy of contacts
+    private var contacts = emptyList<Contact>() // scashowane kontakty
     private val listener = if (context is MainActivity) context else throw RuntimeException("Activity must implement OnContactListener interface!")
 
     inner class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
