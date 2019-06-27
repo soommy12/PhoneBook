@@ -10,10 +10,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Contact::class], version = 3)
+@Database(entities = [Contact::class, Address::class], version = 3)
 abstract class MyRoomDatabase : RoomDatabase() {
 
     abstract fun contactDao() : ContactDao
+    abstract fun addressDao() : AddressDao
 
         companion object {
 
@@ -29,6 +30,12 @@ abstract class MyRoomDatabase : RoomDatabase() {
                 }
             }
 
+            private val MIGRATION_3_4 = object :Migration(3,4){
+                override fun migrate(database: SupportSQLiteDatabase) {
+                    database.execSQL("CREATE TABLE 'address_table' ('id' INTEGER NOT NULL, 'city', TEXT NOT NULL, 'street' TEXT NOT NULL, 'number' INTEGER NOT NULL, PRIMARY KEY('id'))")
+                }
+            }
+
             @Volatile
             private var INSTANCE: MyRoomDatabase? = null
             fun getDatabase(
@@ -41,7 +48,7 @@ abstract class MyRoomDatabase : RoomDatabase() {
                         "word_database")
                         .addCallback(ContactDatabaseCallback(scope))
                         .fallbackToDestructiveMigration() // if no migrations, or migrations are wrong - destroy whole db
-                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                         .build()
                 INSTANCE = instance
                 instance
