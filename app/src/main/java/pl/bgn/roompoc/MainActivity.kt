@@ -2,6 +2,7 @@ package pl.bgn.roompoc
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
+import pl.bgn.roompoc.data.Contact
 
 class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
 
@@ -24,6 +26,7 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
     }
 
     private lateinit var contactsViewModel: ContactsViewModel
+    private lateinit var viewModel: SingleContactViewModel
     private lateinit var searchView: SearchView
     private lateinit var adapter: ContactListAdapter
     private lateinit var recyclerView: RecyclerView
@@ -33,12 +36,30 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        val names = listOf("Jacek", "Gnacek", "Wiesiek", "Czesieg", "Ignacy", "DoTacy", "Tyrion", "Furion", "Bartosz", "Janina")
+        val surnames = listOf("Gerwazy", "Lotto", "Waszny", "Graszny", "Toczy", "Maszyny", "Amator", "Torano", "Tradys", "Marszal")
+        val numbers = listOf(143,543,312,548,9454,4723,432,4328,135,432)
+
         contactsViewModel = ViewModelProviders.of(this).get(ContactsViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(SingleContactViewModel::class.java)
 
         recyclerView = findViewById(R.id.recyclerview)
         adapter = ContactListAdapter(this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+
+            Log.e("INFO", "Putting 10k elements into DB...")
+            for(i in 0..10000){
+                val Contact = Contact(
+                    0,
+                    surnames[(0..9).random()],
+                    names[(0..9).random()],
+                    numbers[(0..9).random()]
+                )
+                viewModel.insert(Contact)
+            }
+            Log.e("INFO", "Done")
 
         val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
 
@@ -52,6 +73,8 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
                 return false
             }
         }
+
+
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
@@ -65,6 +88,9 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
             val intent = Intent(this@MainActivity, SingleContactActivity::class.java)
             startActivityForResult(intent, newWordActivityRequestCode)
         }
+
+
+
     }
 
     private val onQuerySearchListener = object : SearchView.OnQueryTextListener {

@@ -1,6 +1,8 @@
 package pl.bgn.roompoc.data
 
 import android.content.Context
+import android.util.Log
+import androidx.lifecycle.ViewModelProviders
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -9,9 +11,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import pl.bgn.roompoc.SingleContactViewModel
+import java.util.*
 
 @Database(entities = [Contact::class], version = 3)
 abstract class MyRoomDatabase : RoomDatabase() {
+
 
     abstract fun contactDao() : ContactDao
 
@@ -50,6 +55,9 @@ abstract class MyRoomDatabase : RoomDatabase() {
     }
 
     private class ContactDatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
+        val names = listOf("Jacek", "Gnacek", "Wiesiek", "Czesieg", "Ignacy", "DoTacy", "Tyrion", "Furion", "Bartosz", "Janina")
+        val surnames = listOf("Gerwazy", "Lotto", "Waszny", "Graszny", "Toczy", "Maszyny", "Amator", "Torano", "Tradys", "Marszal")
+        val numbers = listOf(143,543,312,548,9454,4723,432,4328,135,432)
 
         override fun onOpen(db: SupportSQLiteDatabase) {
             super.onOpen(db)
@@ -62,6 +70,19 @@ abstract class MyRoomDatabase : RoomDatabase() {
 
         suspend fun populateDatabase(contactDao: ContactDao) {
            // mozna dac jakies inserty tutaj
+
+//            Log.e("INFO", "Putting 10k elements into DB...")
+//            for(i in 0..10000){
+//                val Contact = Contact(
+//                    0,
+//                    surnames[(0..9).random()],
+//                    names[(0..9).random()],
+//                    numbers[(0..9).random()]
+//                )
+//                contactDao.insert(Contact)
+//            }
+//            Log.e("INFO", "Done")
+
         }
     }
 
