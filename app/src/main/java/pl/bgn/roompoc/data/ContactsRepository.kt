@@ -2,7 +2,6 @@ package pl.bgn.roompoc.data
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 
 class ContactsRepository(private val contactDao: ContactDao) {
     var contacts: LiveData<List<Contact>> = contactDao.getAllContacts()
