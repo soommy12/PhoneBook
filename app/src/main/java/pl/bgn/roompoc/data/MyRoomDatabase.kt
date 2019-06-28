@@ -10,7 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Contact::class, Address::class], version = 3)
+@Database(entities = [Contact::class, Address::class], version = 4)
 abstract class MyRoomDatabase : RoomDatabase() {
 
     abstract fun contactDao() : ContactDao
@@ -32,7 +32,7 @@ abstract class MyRoomDatabase : RoomDatabase() {
 
             private val MIGRATION_3_4 = object :Migration(3,4){
                 override fun migrate(database: SupportSQLiteDatabase) {
-                    database.execSQL("CREATE TABLE 'address_table' ('id' INTEGER NOT NULL, 'city', TEXT NOT NULL, 'street' TEXT NOT NULL, 'number' INTEGER NOT NULL, PRIMARY KEY('id'))")
+                    database.execSQL("CREATE TABLE 'address_table' ('id' INTEGER NOT NULL, 'contactId' INTEGER NOT NULL, 'city' TEXT NOT NULL, 'street' TEXT NOT NULL, 'number' INTEGER NOT NULL, PRIMARY KEY('id'), FOREIGN KEY ('contactId') REFERENCES Contact('id'))")
                 }
             }
 

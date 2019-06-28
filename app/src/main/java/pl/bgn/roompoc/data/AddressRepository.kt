@@ -15,5 +15,5 @@ class AddressRepository(private val addressDao: AddressDao) {
     suspend fun delete(address: Address) = addressDao.delete(address)
 
     @WorkerThread
-    fun getContactAdresses(userId: Int) = addressDao.getAdressesForContact(userId)
+    fun getContactAdresses(userId: Int) = addressDao.getAddressesForContact(userId)
 }
