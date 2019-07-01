@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
         recyclerView = findViewById(R.id.recyclerview)
         adapter = ContactListAdapter(this)
         recyclerView.adapter = adapter
+
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {

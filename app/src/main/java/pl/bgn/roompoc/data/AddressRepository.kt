@@ -1,7 +1,6 @@
 package pl.bgn.roompoc.data
 
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.LiveData
 
 class AddressRepository(private val addressDao: AddressDao) {
 

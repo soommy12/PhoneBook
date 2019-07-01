@@ -3,6 +3,7 @@ package pl.bgn.roompoc
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,7 @@ class SingleContactActivity : AppCompatActivity() {
     private lateinit var editSurnameView: EditText
     private lateinit var editPhoneNumberView: EditText
     private lateinit var viewModel: SingleContactViewModel
+    private lateinit var buttonAddAddress : Button
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,21 +27,30 @@ class SingleContactActivity : AppCompatActivity() {
         editNameView = findViewById(R.id.edit_name)
         editSurnameView = findViewById(R.id.edit_surname)
         editPhoneNumberView = findViewById(R.id.edit_phone)
+        buttonAddAddress = findViewById(R.id.button_add_address)
 
         val bundle : Bundle ?= intent.extras
         val id = bundle?.getInt(EXTRA_ID)
+        supportActionBar?.title = "Add new contact"
         viewModel = ViewModelProviders.of(this).get(SingleContactViewModel::class.java)
         if(id != null) {
+            supportActionBar?.title = "Edit contact"
             CoroutineScope(Dispatchers.IO).launch {
                 val contact = viewModel.getContact(id)
                 editNameView.setText(contact.name)
                 editSurnameView.setText(contact.surname)
                 editPhoneNumberView.setText(contact.number.toString())
+                buttonAddAddress.visibility = View.VISIBLE
+                buttonAddAddress.setOnClickListener {
+                    val intent = Intent(this@SingleContactActivity, AddAddressActivity::class.java)
+                    intent.putExtra(EXTRA_ID, id)
+                    startActivity(intent)
+                }
             }
         }
 
-        val button = findViewById<Button>(R.id.button_save)
-        button.setOnClickListener {
+        val buttonSave = findViewById<Button>(R.id.button_save)
+        buttonSave.setOnClickListener {
             val replyIntent = Intent()
             if (TextUtils.isEmpty(editNameView.text) || TextUtils.isEmpty(editSurnameView.text)
                 || TextUtils.isEmpty(editPhoneNumberView.text)) {
@@ -58,6 +69,7 @@ class SingleContactActivity : AppCompatActivity() {
             }
             finish()
         }
+
     }
 
     companion object {
