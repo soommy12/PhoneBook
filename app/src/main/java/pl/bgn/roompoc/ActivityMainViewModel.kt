@@ -8,7 +8,7 @@ import pl.bgn.roompoc.data.Contact
 import pl.bgn.roompoc.data.ContactsRepository
 import pl.bgn.roompoc.data.MyRoomDatabase
 
-class ContactsViewModel(application: Application) : AndroidViewModel(application){
+class ActivityMainViewModel(application: Application) : AndroidViewModel(application){
 
     private val contactRepository: ContactsRepository
     private val searchInput = MutableLiveData<String>()
