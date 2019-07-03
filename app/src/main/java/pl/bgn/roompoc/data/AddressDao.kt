@@ -15,6 +15,6 @@ interface AddressDao {
     @Delete
     suspend fun delete(address: Address)
 
-    @Query("SELECT * FROM address_table WHERE id =:contactId")
+    @Query("SELECT * FROM address_table WHERE contactId =:contactId")
     fun getAddressesForContact(contactId: Int) : LiveData<List<Address>>
 }

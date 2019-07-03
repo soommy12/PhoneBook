@@ -3,6 +3,7 @@ package pl.bgn.roompoc
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -31,6 +32,13 @@ class SingleContactActivity : AppCompatActivity() {
 
         val bundle : Bundle ?= intent.extras
         val id = bundle?.getInt(EXTRA_ID)
+        buttonAddAddress.visibility = if (id!=null) View.VISIBLE else View.GONE
+        buttonAddAddress.setOnClickListener {
+            val intent = Intent(this@SingleContactActivity, AddAddressActivity::class.java)
+            Log.e("AG", "ID: $id")
+            intent.putExtra(EXTRA_ID, id)
+            startActivity(intent)
+        }
         supportActionBar?.title = "Add new contact"
         viewModel = ViewModelProviders.of(this).get(SingleContactViewModel::class.java)
         if(id != null) {
@@ -40,12 +48,6 @@ class SingleContactActivity : AppCompatActivity() {
                 editNameView.setText(contact.name)
                 editSurnameView.setText(contact.surname)
                 editPhoneNumberView.setText(contact.number.toString())
-                buttonAddAddress.visibility = View.VISIBLE
-                buttonAddAddress.setOnClickListener {
-                    val intent = Intent(this@SingleContactActivity, AddAddressActivity::class.java)
-                    intent.putExtra(EXTRA_ID, id)
-                    startActivity(intent)
-                }
             }
         }
 

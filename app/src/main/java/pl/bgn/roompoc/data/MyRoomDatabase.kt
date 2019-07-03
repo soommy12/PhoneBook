@@ -45,7 +45,7 @@ abstract class MyRoomDatabase : RoomDatabase() {
                     val instance = Room.databaseBuilder(
                         context.applicationContext,
                         MyRoomDatabase::class.java,
-                        "word_database")
+                        "contact_database")
                         .addCallback(ContactDatabaseCallback(scope))
                         .fallbackToDestructiveMigration() // if no migrations, or migrations are wrong - destroy whole db
                         .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)

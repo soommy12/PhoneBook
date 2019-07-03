@@ -2,6 +2,7 @@ package pl.bgn.roompoc
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.lifecycle.ViewModelProvider
@@ -31,6 +32,7 @@ class AddAddressActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this, SingleAddressViewModelFactory(application, id)).get(SingleAddressViewModel::class.java)
 
         btnSave.setOnClickListener {
+            Log.e("ADDRESS ADDED FOR", "$id")
             viewModel.insert(Address(0, id, editCity.text.toString(), editStreet.text.toString(), editNumber.text.toString().toInt()))
             finish()
         }
