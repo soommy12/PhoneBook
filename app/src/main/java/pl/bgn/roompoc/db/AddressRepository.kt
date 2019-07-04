@@ -17,4 +17,7 @@ class AddressRepository(private val addressDao: AddressDao) {
 
     @WorkerThread
     fun getContactAdresses(userId: Int) = addressDao.getAddressesForContact(userId)
+
+    @WorkerThread
+    fun getAddress(addressId: Int) = addressDao.getAddress(addressId)
 }

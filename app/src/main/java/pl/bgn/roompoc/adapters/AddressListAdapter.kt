@@ -42,7 +42,6 @@ class AddressListAdapter internal constructor(context: Context) : RecyclerView.A
     }
 
     internal fun setAddresses(addresses: List<Address>){
-        Log.e("Addreses", "Mamy $addresses")
         this.addresses = addresses
         notifyDataSetChanged()
     }

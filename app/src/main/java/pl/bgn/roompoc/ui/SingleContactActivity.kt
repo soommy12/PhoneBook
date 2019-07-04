@@ -33,12 +33,12 @@ class SingleContactActivity : AppCompatActivity() {
         buttonAddAddress = findViewById(R.id.button_add_address)
 
         val bundle : Bundle ?= intent.extras
-        val id = bundle?.getInt(EXTRA_ID)
+        val id = bundle?.getInt(EXTRA_CONTACT_ID)
         buttonAddAddress.visibility = if (id!=null) View.VISIBLE else View.GONE
         buttonAddAddress.setOnClickListener {
-            val intent = Intent(this@SingleContactActivity, AddAddressActivity::class.java)
+            val intent = Intent(this@SingleContactActivity, SingleAddressActivity::class.java)
             Log.e("AG", "ID: $id")
-            intent.putExtra(EXTRA_ID, id)
+            intent.putExtra(EXTRA_CONTACT_ID, id)
             startActivity(intent)
         }
         supportActionBar?.title = "Add new contact"
@@ -80,6 +80,6 @@ class SingleContactActivity : AppCompatActivity() {
         const val RESULT_NO_DATA = -2
         const val RESULT_INSERT = 1
         const val RESULT_UPDATE = 2
-        const val EXTRA_ID = "pl.bgn.roompoc.ID"
+        const val EXTRA_CONTACT_ID = "pl.bgn.roompoc.ID"
     }
 }

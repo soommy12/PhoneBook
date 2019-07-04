@@ -12,39 +12,42 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pl.bgn.roompoc.R
-import pl.bgn.roompoc.db.entity.Contact
 import pl.bgn.roompoc.databinding.RecyclerviewContactItemNewBinding
+import pl.bgn.roompoc.db.entity.Contact
 import pl.bgn.roompoc.ui.MainActivity
-import pl.bgn.roompoc.viewmodel.SingleAddressViewModel
-import pl.bgn.roompoc.viewmodel.SingleAddressViewModelFactory
-import java.lang.RuntimeException
+import pl.bgn.roompoc.viewmodel.AddressesViewModel
+import pl.bgn.roompoc.viewmodel.AddressesViewModelFactory
 
 class ContactListAdapter internal constructor(context: Context) : RecyclerView.Adapter<ContactListAdapter.ContactViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var contacts = emptyList<Contact>() // scashowane kontakty
     private val listener = if (context is MainActivity) context else throw RuntimeException("Activity must implement OnContactListener interface!")
-    private final val TAG = "ContactListAdapter"
+    private val TAG = "ContactListAdapter"
 
     inner class ContactViewHolder(val binding: RecyclerviewContactItemNewBinding, val context : Context ) : RecyclerView.ViewHolder(binding.root) {
+
+        lateinit var addressesViewModel: AddressesViewModel
 
         fun bind(contact: Contact) {
             with(binding){
                 nameSurname.text = contact.name + " " + contact.surname
                 phone.text = contact.number.toString()
-                editContact.setOnClickListener { Log.e("TAG", "EDIT_Clicked")
+                editContact.setOnClickListener {
+                    Log.e(TAG, "Edit contact clicked")
                     listener.onContactClick(adapterPosition) }
                 val adapter = AddressListAdapter(context)
                 recyclerviewAddresses.adapter = adapter
-                viewmodel!!.contactAddresses.observe(context as FragmentActivity, Observer { addresses ->
+                recyclerviewAddresses.layoutManager = LinearLayoutManager(context)
+
+                addressesViewModel.contactAddresses.observe(context as FragmentActivity, Observer { addresses ->
                     addresses?.let {
-                        Log.e(TAG, "SingleAddress")
                         adapter.setAddresses(it)
                     }
                 })
-                recyclerviewAddresses.layoutManager = LinearLayoutManager(context)
+
                 root.setOnClickListener {
-                    Log.e("TAG", "Contact clicked")
+                    Log.e(TAG, "Contact clicked")
                     recyclerviewAddresses.visibility = if(recyclerviewAddresses.visibility == View.GONE) View.VISIBLE else View.GONE
                 }
             }
@@ -59,9 +62,11 @@ class ContactListAdapter internal constructor(context: Context) : RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
-        val vm : SingleAddressViewModel = ViewModelProviders.of(holder.context as FragmentActivity,
-            SingleAddressViewModelFactory(holder.context.application, contacts[position].id)
-        ).get(SingleAddressViewModel::class.java)
+        val vm : AddressesViewModel = ViewModelProviders.of(holder.context as FragmentActivity,
+            AddressesViewModelFactory(holder.context.application, contacts[position].id)
+        ).get(AddressesViewModel::class.java)
+        Log.e(TAG, "ID Z BIND HOLDERA:" + contacts[position].id)
+        holder.addressesViewModel = vm
         holder.binding.viewmodel = vm
         holder.bind(contacts[position])
     }

@@ -18,4 +18,7 @@ interface AddressDao {
 
     @Query("SELECT * FROM address_table WHERE contactId =:contactId")
     fun getAddressesForContact(contactId: Int) : LiveData<List<Address>>
+
+    @Query("SELECT * FROM address_table WHERE id = :addressId")
+    fun getAddress(addressId: Int) : Address
 }

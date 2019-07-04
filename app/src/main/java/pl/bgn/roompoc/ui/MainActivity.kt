@@ -15,18 +15,18 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.bgn.roompoc.adapters.ContactListAdapter
 import pl.bgn.roompoc.R
-import pl.bgn.roompoc.viewmodel.ActivityMainViewModel
+import pl.bgn.roompoc.viewmodel.ContactsViewModel
 
 class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
 
 
     override fun onContactClick(position: Int) {
         val intent = Intent(this@MainActivity, SingleContactActivity::class.java)
-        intent.putExtra(SingleContactActivity.EXTRA_ID, activityMainViewModel.contacts.value!![position].id)
+        intent.putExtra(SingleContactActivity.EXTRA_CONTACT_ID, contactsViewModel.contacts.value!![position].id)
         startActivityForResult(intent, newWordActivityRequestCode)
     }
 
-    private lateinit var activityMainViewModel: ActivityMainViewModel
+    private lateinit var contactsViewModel: ContactsViewModel
     private lateinit var searchView: SearchView
     private lateinit var adapter: ContactListAdapter
     private lateinit var recyclerView: RecyclerView
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        activityMainViewModel = ViewModelProviders.of(this).get(ActivityMainViewModel::class.java)
+        contactsViewModel = ViewModelProviders.of(this).get(ContactsViewModel::class.java)
 
         recyclerView = findViewById(R.id.recyclerview)
         adapter = ContactListAdapter(this)
@@ -48,8 +48,8 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                val contact = activityMainViewModel.contacts.value!![position]
-                activityMainViewModel.delete(contact)
+                val contact = contactsViewModel.contacts.value!![position]
+                contactsViewModel.delete(contact)
             }
 
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
-        activityMainViewModel.contacts.observe(this, Observer { contacts ->
+        contactsViewModel.contacts.observe(this, Observer { contacts ->
             contacts?.let {
                 adapter.setContacts(it)
             }
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
 
         private fun getContactsFromDB(searchText: String?) {
             val search = "%$searchText%"
-            activityMainViewModel.setSearchValue(search)
+            contactsViewModel.setSearchValue(search)
         }
     }
 

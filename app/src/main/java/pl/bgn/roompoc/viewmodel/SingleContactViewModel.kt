@@ -13,12 +13,10 @@ import pl.bgn.roompoc.db.MyRoomDatabase
 class SingleContactViewModel(application: Application) : AndroidViewModel(application) {
 
     private val contactRepository: ContactsRepository
-    private val allContacts: LiveData<List<Contact>>
 
     init {
         val contactDao = MyRoomDatabase.getDatabase(application, viewModelScope).contactDao()
         contactRepository = ContactsRepository(contactDao)
-        allContacts = contactRepository.contacts
     }
 
     fun getContact(id :Int): Contact = contactRepository.getContact(id)

@@ -7,12 +7,11 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.lifecycle.ViewModelProviders
 import pl.bgn.roompoc.R
-import pl.bgn.roompoc.ui.SingleContactActivity.Companion.EXTRA_ID
+import pl.bgn.roompoc.ui.SingleContactActivity.Companion.EXTRA_CONTACT_ID
 import pl.bgn.roompoc.db.entity.Address
 import pl.bgn.roompoc.viewmodel.SingleAddressViewModel
-import pl.bgn.roompoc.viewmodel.SingleAddressViewModelFactory
 
-class AddAddressActivity : AppCompatActivity() {
+class SingleAddressActivity : AppCompatActivity() {
 
     private lateinit var viewModel: SingleAddressViewModel
     private lateinit var editCity : EditText
@@ -29,17 +28,16 @@ class AddAddressActivity : AppCompatActivity() {
         supportActionBar?.title = "Add address"
 
         val bundle : Bundle ?= intent.extras
-        val id : Int = bundle?.getInt(EXTRA_ID)!!
+        val contactId : Int = bundle?.getInt(EXTRA_CONTACT_ID)!!
 
-        viewModel = ViewModelProviders.of(this, SingleAddressViewModelFactory(application, id)).get(
-            SingleAddressViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(SingleAddressViewModel::class.java)
 
         btnSave.setOnClickListener {
-            Log.e("ADDRESS ADDED FOR", "$id")
+            Log.e("ADDRESS ADDED FOR", "$contactId")
             viewModel.insert(
                 Address(
                     0,
-                    id,
+                    contactId,
                     editCity.text.toString(),
                     editStreet.text.toString(),
                     editNumber.text.toString().toInt()
