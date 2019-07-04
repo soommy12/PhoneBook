@@ -9,12 +9,12 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme" tools:ignore="GoogleAppIndexingWarning">
-        <activity android:parentActivityName=".SingleContactActivity" android:name=".AddAddressActivity">
+        <activity android:parentActivityName=".ui.SingleContactActivity" android:name=".ui.AddAddressActivity">
         </activity>
-        <activity android:parentActivityName=".MainActivity" android:name=".SingleContactActivity">
+        <activity android:parentActivityName=".ui.MainActivity" android:name=".ui.SingleContactActivity">
         </activity>
         <activity
-                android:name=".MainActivity"
+                android:name=".ui.MainActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

@@ -1,4 +1,4 @@
-package pl.bgn.roompoc
+package pl.bgn.roompoc.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.ViewModel

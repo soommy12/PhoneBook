@@ -1,4 +1,4 @@
-package pl.bgn.roompoc.data
+package pl.bgn.roompoc.db.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey

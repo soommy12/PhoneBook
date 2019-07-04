@@ -1,4 +1,4 @@
-package pl.bgn.roompoc.data
+package pl.bgn.roompoc.db
 
 import android.content.Context
 import androidx.room.Database
@@ -9,6 +9,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import pl.bgn.roompoc.db.dao.AddressDao
+import pl.bgn.roompoc.db.dao.ContactDao
+import pl.bgn.roompoc.db.entity.Address
+import pl.bgn.roompoc.db.entity.Contact
 
 @Database(entities = [Contact::class, Address::class], version = 4)
 abstract class MyRoomDatabase : RoomDatabase() {

@@ -1,4 +1,4 @@
-package pl.bgn.roompoc
+package pl.bgn.roompoc.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -6,9 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import pl.bgn.roompoc.data.Contact
-import pl.bgn.roompoc.data.ContactsRepository
-import pl.bgn.roompoc.data.MyRoomDatabase
+import pl.bgn.roompoc.db.entity.Contact
+import pl.bgn.roompoc.db.ContactsRepository
+import pl.bgn.roompoc.db.MyRoomDatabase
 
 class SingleContactViewModel(application: Application) : AndroidViewModel(application) {
 

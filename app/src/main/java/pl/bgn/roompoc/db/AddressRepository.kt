@@ -1,6 +1,8 @@
-package pl.bgn.roompoc.data
+package pl.bgn.roompoc.db
 
 import androidx.annotation.WorkerThread
+import pl.bgn.roompoc.db.dao.AddressDao
+import pl.bgn.roompoc.db.entity.Address
 
 class AddressRepository(private val addressDao: AddressDao) {
 

@@ -1,4 +1,4 @@
-package pl.bgn.roompoc
+package pl.bgn.roompoc.adapters
 
 import android.content.Context
 import android.util.Log
@@ -11,8 +11,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import pl.bgn.roompoc.data.Contact
+import pl.bgn.roompoc.R
+import pl.bgn.roompoc.db.entity.Contact
 import pl.bgn.roompoc.databinding.RecyclerviewContactItemNewBinding
+import pl.bgn.roompoc.ui.MainActivity
+import pl.bgn.roompoc.viewmodel.SingleAddressViewModel
+import pl.bgn.roompoc.viewmodel.SingleAddressViewModelFactory
 import java.lang.RuntimeException
 
 class ContactListAdapter internal constructor(context: Context) : RecyclerView.Adapter<ContactListAdapter.ContactViewHolder>() {
@@ -20,6 +24,7 @@ class ContactListAdapter internal constructor(context: Context) : RecyclerView.A
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var contacts = emptyList<Contact>() // scashowane kontakty
     private val listener = if (context is MainActivity) context else throw RuntimeException("Activity must implement OnContactListener interface!")
+    private final val TAG = "ContactListAdapter"
 
     inner class ContactViewHolder(val binding: RecyclerviewContactItemNewBinding, val context : Context ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -33,7 +38,7 @@ class ContactListAdapter internal constructor(context: Context) : RecyclerView.A
                 recyclerviewAddresses.adapter = adapter
                 viewmodel!!.contactAddresses.observe(context as FragmentActivity, Observer { addresses ->
                     addresses?.let {
-                        Log.e("OBSErVER", "for adresses called")
+                        Log.e(TAG, "SingleAddress")
                         adapter.setAddresses(it)
                     }
                 })
@@ -54,7 +59,9 @@ class ContactListAdapter internal constructor(context: Context) : RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
-        val vm : SingleAddressViewModel = ViewModelProviders.of(holder.context as FragmentActivity, SingleAddressViewModelFactory(holder.context.application, contacts[position].id)).get(SingleAddressViewModel::class.java)
+        val vm : SingleAddressViewModel = ViewModelProviders.of(holder.context as FragmentActivity,
+            SingleAddressViewModelFactory(holder.context.application, contacts[position].id)
+        ).get(SingleAddressViewModel::class.java)
         holder.binding.viewmodel = vm
         holder.bind(contacts[position])
     }

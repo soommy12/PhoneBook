@@ -1,15 +1,15 @@
-package pl.bgn.roompoc
+package pl.bgn.roompoc.adapters
 
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
-import pl.bgn.roompoc.data.Address
+import pl.bgn.roompoc.R
+import pl.bgn.roompoc.db.entity.Address
 import pl.bgn.roompoc.databinding.RecyclerviewAddressItemBinding
+import pl.bgn.roompoc.ui.MainActivity
 import java.lang.RuntimeException
 
 class AddressListAdapter internal constructor(context: Context) : RecyclerView.Adapter<AddressListAdapter.AddressViewHolder>() {

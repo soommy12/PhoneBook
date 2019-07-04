@@ -1,4 +1,4 @@
-package pl.bgn.roompoc
+package pl.bgn.roompoc.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,7 +12,9 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import pl.bgn.roompoc.data.Contact
+import pl.bgn.roompoc.R
+import pl.bgn.roompoc.db.entity.Contact
+import pl.bgn.roompoc.viewmodel.SingleContactViewModel
 
 class SingleContactActivity : AppCompatActivity() {
 

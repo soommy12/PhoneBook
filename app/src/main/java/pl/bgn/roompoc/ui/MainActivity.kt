@@ -1,4 +1,4 @@
-package pl.bgn.roompoc
+package pl.bgn.roompoc.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
+import pl.bgn.roompoc.adapters.ContactListAdapter
+import pl.bgn.roompoc.R
+import pl.bgn.roompoc.viewmodel.ActivityMainViewModel
 
 class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
 
@@ -110,7 +113,8 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
             when (resultCode) {
                 SingleContactActivity.RESULT_INSERT -> Toast.makeText(this, "New contact added", Toast.LENGTH_SHORT).show()
                 SingleContactActivity.RESULT_UPDATE -> Toast.makeText(this, "Contact updated", Toast.LENGTH_SHORT).show()
-                SingleContactActivity.RESULT_NO_DATA -> Toast.makeText(applicationContext, R.string.empty_not_saved, Toast.LENGTH_LONG).show()
+                SingleContactActivity.RESULT_NO_DATA -> Toast.makeText(applicationContext,
+                    R.string.empty_not_saved, Toast.LENGTH_LONG).show()
             }
         }
     }

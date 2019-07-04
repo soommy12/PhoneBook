@@ -1,7 +1,8 @@
-package pl.bgn.roompoc.data
+package pl.bgn.roompoc.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import pl.bgn.roompoc.db.entity.Contact
 
 @Dao
 interface ContactDao {
