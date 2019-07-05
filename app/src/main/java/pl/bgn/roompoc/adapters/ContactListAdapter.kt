@@ -1,5 +1,6 @@
 package pl.bgn.roompoc.adapters
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,11 +19,10 @@ import pl.bgn.roompoc.ui.MainActivity
 import pl.bgn.roompoc.viewmodel.AddressesViewModel
 import pl.bgn.roompoc.viewmodel.AddressesViewModelFactory
 
-class ContactListAdapter internal constructor(context: Context) : RecyclerView.Adapter<ContactListAdapter.ContactViewHolder>() {
+class ContactListAdapter internal constructor(val ctx: Context) : RecyclerView.Adapter<ContactListAdapter.ContactViewHolder>() {
 
-    private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var contacts = emptyList<Contact>() // scashowane kontakty
-    private val listener = if (context is MainActivity) context else throw RuntimeException("Activity must implement OnContactListener interface!")
+    private var contacts = emptyList<Contact>() // cashed contacts
+    private val listener = if (ctx is MainActivity) ctx else throw RuntimeException("Activity must implement OnContactListener interface!")
     private val TAG = "ContactListAdapter"
 
     inner class ContactViewHolder(val binding: RecyclerviewContactItemNewBinding, val context : Context ) : RecyclerView.ViewHolder(binding.root) {
@@ -34,7 +34,6 @@ class ContactListAdapter internal constructor(context: Context) : RecyclerView.A
                 nameSurname.text = contact.name + " " + contact.surname
                 phone.text = contact.number.toString()
                 editContact.setOnClickListener {
-                    Log.e(TAG, "Edit contact clicked")
                     listener.onContactClick(adapterPosition) }
                 val adapter = AddressListAdapter(context)
                 recyclerviewAddresses.adapter = adapter
@@ -46,8 +45,9 @@ class ContactListAdapter internal constructor(context: Context) : RecyclerView.A
                     }
                 })
 
+
+
                 root.setOnClickListener {
-                    Log.e(TAG, "Contact clicked")
                     recyclerviewAddresses.visibility = if(recyclerviewAddresses.visibility == View.GONE) View.VISIBLE else View.GONE
                 }
             }
@@ -62,12 +62,13 @@ class ContactListAdapter internal constructor(context: Context) : RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
-        val vm : AddressesViewModel = ViewModelProviders.of(holder.context as FragmentActivity,
-            AddressesViewModelFactory(holder.context.application, contacts[position].id)
+        val vm : AddressesViewModel = ViewModelProviders.of(holder.itemView.context as FragmentActivity,
+            AddressesViewModelFactory(ctx.applicationContext as Application, contacts[position].id)
         ).get(AddressesViewModel::class.java)
-        Log.e(TAG, "ID Z BIND HOLDERA:" + contacts[position].id)
+        holder.itemView.context
+        Log.e(TAG, "ID:" + contacts[position].id)
+        Log.e(TAG, "vm: $vm")
         holder.addressesViewModel = vm
-        holder.binding.viewmodel = vm
         holder.bind(contacts[position])
     }
 

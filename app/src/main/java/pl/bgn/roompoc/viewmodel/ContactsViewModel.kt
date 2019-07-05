@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import pl.bgn.roompoc.db.entity.Contact
 import pl.bgn.roompoc.db.ContactsRepository
 import pl.bgn.roompoc.db.MyRoomDatabase
+import pl.bgn.roompoc.db.entity.Address
 
 class ContactsViewModel(application: Application) : AndroidViewModel(application){
 
@@ -25,6 +26,7 @@ class ContactsViewModel(application: Application) : AndroidViewModel(application
                         contactRepository.contacts
                     else contactRepository.getSearchContacts(searchText)
         }
+
     }
 
     fun delete(contact: Contact) = viewModelScope.launch(Dispatchers.IO) { contactRepository.delete(contact)}
