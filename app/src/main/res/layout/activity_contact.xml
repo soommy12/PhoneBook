@@ -41,15 +41,6 @@
             android:textSize="18sp" />
 
     <Button
-            android:id="@+id/button_add_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:text="@string/button_add_address"
-            android:visibility="gone"
-            android:textColor="@color/buttonLabel" />
-
-    <Button
             android:id="@+id/button_save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

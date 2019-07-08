@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -15,15 +16,26 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.bgn.roompoc.adapters.ContactListAdapter
 import pl.bgn.roompoc.R
+import pl.bgn.roompoc.db.entity.Address
 import pl.bgn.roompoc.viewmodel.ContactsViewModel
 
 class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
 
 
+    override fun onSwipeAddress(address: Address) {
+        contactsViewModel.deleteAddress(address)
+    }
+
     override fun onContactClick(position: Int) {
         val intent = Intent(this@MainActivity, SingleContactActivity::class.java)
         intent.putExtra(SingleContactActivity.EXTRA_CONTACT_ID, contactsViewModel.contacts.value!![position].id)
-        startActivityForResult(intent, newWordActivityRequestCode)
+        startActivityForResult(intent, newContactActivityRequestCode)
+    }
+
+    override fun onAddAddress(contactID: Int) {
+        val intent = Intent(this@MainActivity, SingleAddressActivity::class.java)
+        intent.putExtra(SingleContactActivity.EXTRA_CONTACT_ID, contactID)
+        startActivity(intent)
     }
 
     private lateinit var contactsViewModel: ContactsViewModel
@@ -59,15 +71,22 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
+
         contactsViewModel.contacts.observe(this, Observer { contacts ->
             contacts?.let {
                 adapter.setContacts(it)
             }
         })
 
+        contactsViewModel.addresses.observe(this, Observer { addresses ->
+            addresses?.let {
+                adapter.setAddresses(it)
+            }
+        })
+
         fab.setOnClickListener {
             val intent = Intent(this@MainActivity, SingleContactActivity::class.java)
-            startActivityForResult(intent, newWordActivityRequestCode)
+            startActivityForResult(intent, newContactActivityRequestCode)
         }
     }
 
@@ -109,7 +128,7 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == newWordActivityRequestCode){
+        if(requestCode == newContactActivityRequestCode){
             when (resultCode) {
                 SingleContactActivity.RESULT_INSERT -> Toast.makeText(this, "New contact added", Toast.LENGTH_SHORT).show()
                 SingleContactActivity.RESULT_UPDATE -> Toast.makeText(this, "Contact updated", Toast.LENGTH_SHORT).show()
@@ -120,6 +139,6 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
     }
 
     companion object {
-        const val newWordActivityRequestCode = 1
+        const val newContactActivityRequestCode = 1
     }
 }

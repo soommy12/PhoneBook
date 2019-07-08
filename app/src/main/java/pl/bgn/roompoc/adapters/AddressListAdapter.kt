@@ -1,7 +1,6 @@
 package pl.bgn.roompoc.adapters
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -14,18 +13,16 @@ import java.lang.RuntimeException
 
 class AddressListAdapter internal constructor(context: Context) : RecyclerView.Adapter<AddressListAdapter.AddressViewHolder>() {
 
-    private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var addresses = emptyList<Address>() // scashowane adresy
     private val listener = if (context is MainActivity) context else throw RuntimeException("Activity must implement OnAddressListener interface!")
 
-    inner class AddressViewHolder(val binding: RecyclerviewAddressItemBinding, val context : Context) : RecyclerView.ViewHolder(binding.root) {
+    inner class AddressViewHolder(private val binding: RecyclerviewAddressItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(address: Address) {
             with(binding){
                 nameSurname.text = address.street + " " + address.number.toString()
                 phone.text = address.city
 //                editContact.setOnClickListener { listener.onContactClick(adapterPosition) }
-
             }
         }
     }
@@ -34,16 +31,15 @@ class AddressListAdapter internal constructor(context: Context) : RecyclerView.A
         val binding : RecyclerviewAddressItemBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
             R.layout.recyclerview_address_item, parent, false)
-        return AddressViewHolder(binding, parent.context)
+        return AddressViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: AddressViewHolder, position: Int) {
         holder.bind(addresses[position])
     }
 
-    internal fun setAddresses(addresses: List<Address>){
+    internal fun setAddresses(addresses : List<Address>){
         this.addresses = addresses
-        notifyDataSetChanged()
     }
 
     override fun getItemCount() = addresses.size

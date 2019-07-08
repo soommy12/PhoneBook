@@ -1,6 +1,7 @@
 package pl.bgn.roompoc.db
 
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.LiveData
 import pl.bgn.roompoc.db.dao.AddressDao
 import pl.bgn.roompoc.db.entity.Address
 
@@ -16,8 +17,7 @@ class AddressRepository(private val addressDao: AddressDao) {
     suspend fun delete(address: Address) = addressDao.delete(address)
 
     @WorkerThread
-    fun getContactAdresses(userId: Int) = addressDao.getAddressesForContact(userId)
-
-    @WorkerThread
     fun getAddress(addressId: Int) = addressDao.getAddress(addressId)
+
+    fun getAllAddresses(): LiveData<List<Address>> = addressDao.getAllAddresses()
 }

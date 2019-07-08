@@ -14,14 +14,15 @@ import pl.bgn.roompoc.db.MyRoomDatabase
 class AddressesViewModel(application: Application, contactIndex: Int) : AndroidViewModel(application){
 
     private val addressRepository : AddressRepository
-    val contactAddresses : LiveData<List<Address>>
+//    val contactAddresses : LiveData<List<Address>>
 
     init {
         val addressDao = MyRoomDatabase.getDatabase(application, viewModelScope).addressDao()
         addressRepository = AddressRepository(addressDao)
-        contactAddresses = addressRepository.getContactAdresses(contactIndex)
+//        contactAddresses = addressRepository.getContactAddresses(contactIndex)
+
         Log.e("INIT", "idx: $contactIndex")
-        Log.e("INIT", contactAddresses.value.toString())
+//        Log.e("INIT", contactAddresses.value.toString())
     }
 
     fun insert(address: Address) = viewModelScope.launch(Dispatchers.IO) { Log.e("insert", "adding for: ${address.contactId}")

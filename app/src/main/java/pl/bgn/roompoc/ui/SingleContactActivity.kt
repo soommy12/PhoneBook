@@ -22,25 +22,16 @@ class SingleContactActivity : AppCompatActivity() {
     private lateinit var editSurnameView: EditText
     private lateinit var editPhoneNumberView: EditText
     private lateinit var viewModel: SingleContactViewModel
-    private lateinit var buttonAddAddress : Button
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_contact_single)
+        setContentView(R.layout.activity_contact)
         editNameView = findViewById(R.id.edit_name)
         editSurnameView = findViewById(R.id.edit_surname)
         editPhoneNumberView = findViewById(R.id.edit_phone)
-        buttonAddAddress = findViewById(R.id.button_add_address)
 
         val bundle : Bundle ?= intent.extras
         val id = bundle?.getInt(EXTRA_CONTACT_ID)
-        buttonAddAddress.visibility = if (id!=null) View.VISIBLE else View.GONE
-        buttonAddAddress.setOnClickListener {
-            val intent = Intent(this@SingleContactActivity, SingleAddressActivity::class.java)
-            Log.e("AG", "ID: $id")
-            intent.putExtra(EXTRA_CONTACT_ID, id)
-            startActivity(intent)
-        }
         supportActionBar?.title = "Add new contact"
         viewModel = ViewModelProviders.of(this).get(SingleContactViewModel::class.java)
         if(id != null) {

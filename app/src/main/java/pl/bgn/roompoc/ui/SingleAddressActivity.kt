@@ -20,7 +20,7 @@ class SingleAddressActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_address)
+        setContentView(R.layout.activity_address)
         editCity = findViewById(R.id.edit_city)
         editStreet = findViewById(R.id.edit_street)
         editNumber = findViewById(R.id.edit_number)
@@ -33,7 +33,6 @@ class SingleAddressActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this).get(SingleAddressViewModel::class.java)
 
         btnSave.setOnClickListener {
-            Log.e("ADDRESS ADDED FOR", "$contactId")
             viewModel.insert(
                 Address(
                     0,
