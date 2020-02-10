@@ -22,4 +22,8 @@ class ContactsRepository(private val contactDao: ContactDao) {
 
     @WorkerThread
     fun getSearchContacts(text: String?) = contactDao.getSearchContacts(text)
+
+    @WorkerThread
+    fun getContactNameWithID() = contactDao.getContactWithId()
+
 }

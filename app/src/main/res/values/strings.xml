@@ -12,4 +12,5 @@
     <string name="street">Street</string>
     <string name="city">City</string>
     <string name="add_new_address">Add address...</string>
+    <string name="title_activity_companies">CompaniesActivity</string>
 </resources>

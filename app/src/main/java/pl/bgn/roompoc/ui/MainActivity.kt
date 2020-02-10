@@ -88,6 +88,10 @@ class MainActivity : AppCompatActivity(), ContactListAdapter.OnContactListener {
             val intent = Intent(this@MainActivity, SingleContactActivity::class.java)
             startActivityForResult(intent, newContactActivityRequestCode)
         }
+
+        fab2.setOnClickListener{
+            startActivity(Intent(this@MainActivity, CompaniesActivity::class.java))
+        }
     }
 
     private val onQuerySearchListener = object : SearchView.OnQueryTextListener {

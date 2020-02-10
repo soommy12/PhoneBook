@@ -59,6 +59,8 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutines"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutines"
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0-alpha01'
+
+    implementation "com.google.code.gson:gson:2.8.6"
 }
 
 kotlin {

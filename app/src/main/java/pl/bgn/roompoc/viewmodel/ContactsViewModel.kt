@@ -1,6 +1,8 @@
 package pl.bgn.roompoc.viewmodel
 
 import android.app.Application
+import android.database.Cursor
+import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
